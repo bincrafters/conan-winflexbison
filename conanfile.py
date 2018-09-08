@@ -7,7 +7,7 @@ import os
 
 class WinflexbisonConan(ConanFile):
     name = "winflexbison"
-    version = "2.5.14"
+    version = "2.5.15"
     description = "Flex and Bison for Windows"
     url = "https://github.com/bincrafters/conan-winflexbison"
     homepage = "https://github.com/lexxmark/winflexbison"
