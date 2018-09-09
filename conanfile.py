@@ -14,7 +14,7 @@ class WinflexbisonConan(ConanFile):
     author = "Bincrafters <bincrafters@gmail.com>"
     license = "Several licenses"
     exports = ["LICENSE.md"]
-    exports_sources = ["CMakeLists.txt"]
+    exports_sources = ["CMakeLists.txt", "*.patch"]
     generators = "cmake"
     settings = "os", "arch", "compiler", "build_type"
     options = {"shared": [True, False]}
@@ -30,6 +30,10 @@ class WinflexbisonConan(ConanFile):
         tools.get("{0}/archive/v{1}.tar.gz".format(self.homepage, self.version))
         extracted_dir = self.name + "-" + self.version
         os.rename(extracted_dir, self.source_subfolder)
+
+        # https://github.com/lexxmark/winflexbison/issues/21
+        # remove > 2.5.15
+        tools.patch(base_path=self.source_subfolder, patch_file="0001-fix-include-paths-for-cmake.patch")
 
     def configure_cmake(self):
         cmake = CMake(self)
