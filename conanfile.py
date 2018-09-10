@@ -35,6 +35,8 @@ class WinflexbisonConan(ConanFile):
         # remove > 2.5.15
         tools.patch(base_path=self.source_subfolder, patch_file="0001-fix-include-paths-for-cmake.patch")
 
+        tools.patch(base_path=self.source_subfolder, patch_file="0002-workaround-for-visual-studio-2013.patch")
+
     def configure_cmake(self):
         cmake = CMake(self)
         cmake.configure(build_folder=self.build_subfolder)
