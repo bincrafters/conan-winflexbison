@@ -53,6 +53,3 @@ class WinflexbisonConan(ConanFile):
         self.copy(pattern="*.exe", dst="bin", src=actual_build_path, keep_path=False)
         self.copy(pattern="data/*", dst="bin", src=actual_build_path, keep_path=True)
         self.copy(pattern="*.h", dst="include", src=actual_build_path, keep_path=False)
-
-    def package_info(self):
-        self.cpp_info.libs = tools.collect_libs(self)
