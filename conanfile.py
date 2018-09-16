@@ -51,6 +51,7 @@ class WinflexbisonConan(ConanFile):
 
         actual_build_path = "{}/bin/{}".format(self.source_subfolder, self.settings.build_type)
         self.copy(pattern="*.exe", dst="bin", src=actual_build_path, keep_path=False)
+        self.copy(pattern="data/*", dst="bin", src=actual_build_path, keep_path=True)
         self.copy(pattern="*.h", dst="include", src=actual_build_path, keep_path=False)
 
     def package_info(self):
