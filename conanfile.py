@@ -7,7 +7,7 @@ import os
 
 class WinflexbisonConan(ConanFile):
     name = "winflexbison"
-    version = "2.5.15"
+    version = "2.5.16"
     description = "Flex and Bison for Windows"
     url = "https://github.com/bincrafters/conan-winflexbison"
     homepage = "https://github.com/lexxmark/winflexbison"
@@ -27,15 +27,9 @@ class WinflexbisonConan(ConanFile):
             raise Exception("winflexbison is only supported on Windows.")
 
     def source(self):
-        tools.get("{0}/archive/v{1}.tar.gz".format(self.homepage, self.version), sha256="a5ea5b98bb8d4054961f7bc82f458b4a9ef60c5e2dedcaba23a8e4363c2e6dfc")
+        tools.get("{0}/archive/v{1}.tar.gz".format(self.homepage, self.version), sha256="39fe57de6a52dc83c8a9ece90b8484d8d2b764e24e22e30ba5dc018328019a4d")
         extracted_dir = self.name + "-" + self.version
         os.rename(extracted_dir, self.source_subfolder)
-
-        # https://github.com/lexxmark/winflexbison/issues/21
-        # remove > 2.5.15
-        tools.patch(base_path=self.source_subfolder, patch_file="0001-fix-include-paths-for-cmake.patch")
-
-        tools.patch(base_path=self.source_subfolder, patch_file="0002-workaround-for-visual-studio-2013.patch")
 
     def configure_cmake(self):
         cmake = CMake(self)

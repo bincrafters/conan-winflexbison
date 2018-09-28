@@ -1,5 +1,5 @@
 [![Download](https://api.bintray.com/packages/bincrafters/public-conan/winflexbison%3Abincrafters/images/download.svg) ](https://bintray.com/bincrafters/public-conan/winflexbison%3Abincrafters/_latestVersion)
-[![Build status](https://ci.appveyor.com/api/projects/status/github/bincrafters/conan-winflexbison?branch=stable%2F2.5.15&svg=true)](https://ci.appveyor.com/project/bincrafters/conan-winflexbison)
+[![Build status](https://ci.appveyor.com/api/projects/status/github/bincrafters/conan-winflexbison?branch=stable%2F2.5.16&svg=true)](https://ci.appveyor.com/project/bincrafters/conan-winflexbison)
 
 [Conan.io](https://conan.io) package recipe for [*winflexbison*](https://github.com/lexxmark/winflexbison).
 
@@ -11,14 +11,14 @@ The packages generated with this **conanfile** can be found on [Bintray](https:/
 
 ### Basic setup
 
-    $ conan install winflexbison/2.5.15@bincrafters/stable
+    $ conan install winflexbison/2.5.16@bincrafters/stable
 
 ### Project setup
 
 If you handle multiple dependencies in your project is better to add a *conanfile.txt*
 
     [requires]
-    winflexbison/2.5.15@bincrafters/stable
+    winflexbison/2.5.16@bincrafters/stable
 
     [generators]
     cmake
@@ -51,7 +51,7 @@ The following command both runs all the steps of the conan file, and publishes t
 
 ## Upload
 
-    $ conan upload winflexbison/2.5.15@bincrafters/stable --all -r bincrafters
+    $ conan upload winflexbison/2.5.16@bincrafters/stable --all -r bincrafters
 
 
 ## Conan Recipe License
@@ -59,4 +59,4 @@ The following command both runs all the steps of the conan file, and publishes t
 NOTE: The conan recipe license applies only to the files of this recipe, which can be used to build and package winflexbison.
 It does *not* in any way apply or is related to the actual software being packaged.
 
-[MIT](https://github.com/Croydon/conan-winflexbison.git/blob/master/LICENSE)
+[MIT](https://github.com/Croydon/conan-winflexbison.git/blob/stable/2.5.16/LICENSE)
