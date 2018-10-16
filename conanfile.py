@@ -44,11 +44,6 @@ class WinflexbisonConan(ConanFile):
 
         tools.patch(base_path=self.source_subfolder, patch_file="0002-workaround-for-visual-studio-2013.patch")
 
-    def _configure_cmake(self):
-        cmake = CMake(self)
-        cmake.configure(build_folder=self._build_subfolder)
-        return cmake
-
     def build(self):
         cmake = CMake(self)
         cmake.configure()
