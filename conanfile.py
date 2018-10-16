@@ -13,7 +13,7 @@ class WinflexbisonConan(ConanFile):
     url = "https://github.com/bincrafters/conan-winflexbison"
     homepage = "https://github.com/lexxmark/winflexbison"
     author = "Bincrafters <bincrafters@gmail.com>"
-    license = "Several licenses"
+    license = "GPLv3"
     exports = ["LICENSE.md"]
     exports_sources = ["CMakeLists.txt"]
     generators = "cmake"
@@ -21,7 +21,6 @@ class WinflexbisonConan(ConanFile):
     options = {"shared": [True, False]}
     default_options = {"shared": False}
     _source_subfolder = "source_subfolder"
-    _build_subfolder = "build_subfolder"
 
     def config_options(self):
         if self.settings.os != "Windows":
@@ -31,6 +30,13 @@ class WinflexbisonConan(ConanFile):
         tools.get("{0}/archive/v{1}.tar.gz".format(self.homepage, self.version), sha256="a5ea5b98bb8d4054961f7bc82f458b4a9ef60c5e2dedcaba23a8e4363c2e6dfc")
         extracted_dir = self.name + "-" + self.version
         os.rename(extracted_dir, self._source_subfolder)
+        # Generate license from header of a source file
+        with open("%s/%s/bison/data/glr.cc" % (self.source_folder, self._source_subfolder)) as f:
+            content_lines = f.readlines()
+        license_content = []
+        for i in range(2, 16):
+            license_content.append(content_lines[i][2:-1])
+        tools.save("%s/%s/LICENSE" % (self.source_folder, self._source_subfolder), "\n".join(license_content))
 
         # https://github.com/lexxmark/winflexbison/issues/21
         # remove > 2.5.15
