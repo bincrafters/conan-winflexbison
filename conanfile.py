@@ -38,11 +38,6 @@ class WinflexbisonConan(ConanFile):
             license_content.append(content_lines[i][2:-1])
         tools.save("%s/%s/LICENSE" % (self.source_folder, self._source_subfolder), "\n".join(license_content))
 
-    def _configure_cmake(self):
-        cmake = CMake(self)
-        cmake.configure(build_folder=self._build_subfolder)
-        return cmake
-
     def build(self):
         cmake = CMake(self)
         cmake.configure()
