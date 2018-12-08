@@ -45,9 +45,9 @@ class WinflexbisonConan(ConanFile):
 
     def package(self):
         self.copy(pattern="LICENSE", dst="licenses", src=self._source_subfolder)
+        self.copy(pattern="data/*", dst="bin", src="{}/bison".format(self._source_subfolder), keep_path=True)
         actual_build_path = "{}/bin/{}".format(self._source_subfolder, self.settings.build_type)
         self.copy(pattern="*.exe", dst="bin", src=actual_build_path, keep_path=False)
-        self.copy(pattern="data/*", dst="bin", src=actual_build_path, keep_path=True)
         self.copy(pattern="*.h", dst="include", src=actual_build_path, keep_path=False)
 
     def package_info(self):
