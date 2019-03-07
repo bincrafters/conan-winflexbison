@@ -1,14 +1,14 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import os
 from conans import ConanFile, CMake, tools
 from conans.errors import ConanInvalidConfiguration
+import tempfile
 
 
 class WinflexbisonConan(ConanFile):
     name = "winflexbison"
-    version = "2.5.16"
+    version = "2.5.17"
     description = "Flex and Bison for Windows"
     url = "https://github.com/bincrafters/conan-winflexbison"
     homepage = "https://github.com/lexxmark/winflexbison"
@@ -18,25 +18,47 @@ class WinflexbisonConan(ConanFile):
     exports_sources = ["CMakeLists.txt"]
     generators = "cmake"
     settings = "os", "arch", "compiler", "build_type"
-    options = {"shared": [True, False]}
-    default_options = {"shared": False}
-    _source_subfolder = "source_subfolder"
 
-    def config_options(self):
-        if self.settings.os != "Windows":
-            raise ConanInvalidConfiguration("winflexbison is only supported on Windows.")
+    options = {
+        "shared": [True, False],
+        "fPIC": [True, False],
+    }
+    default_options = {
+        "shared": False,
+        "fPIC": True,
+    }
+
+    _source_subfolder = "sources"
+
+    def configure(self):
+        if self.settings.compiler != "Visual Studio":
+            raise ConanInvalidConfiguration("winflexbison is only supported for Visual Studio.")
 
     def source(self):
-        tools.get("{0}/archive/v{1}.tar.gz".format(self.homepage, self.version), sha256="39fe57de6a52dc83c8a9ece90b8484d8d2b764e24e22e30ba5dc018328019a4d")
-        extracted_dir = self.name + "-" + self.version
+        name = "winflexbison"
+        url = "https://github.com/lexxmark/winflexbison/archive/v{}.tar.gz".format(self.version)
+        sha256 = "2ab4c895f9baf03dfdfbb2dc4abe60e87bf46efe12ed1218c38fd7761f0f58fc"
+        filename = "{}-{}.tar.gz".format(name, self.version)
+
+        dlfilepath = os.path.join(tempfile.gettempdir(), filename)
+        if os.path.exists(dlfilepath) and not tools.get_env("WINFLEXBISON_FORCE_DOWNLOAD", False):
+            self.output.info("Skipping download. Using cached {}".format(dlfilepath))
+        else:
+            self.output.info("Downloading {} from {}".format(name, url))
+            tools.download(url, dlfilepath)
+        tools.check_sha256(dlfilepath, sha256)
+        tools.untargz(dlfilepath)
+
+        extracted_dir = "{}-{}".format(name, self.version)
         os.rename(extracted_dir, self._source_subfolder)
+
         # Generate license from header of a source file
-        with open("%s/%s/bison/data/glr.cc" % (self.source_folder, self._source_subfolder)) as f:
+        with open(os.path.join(self.source_folder, self._source_subfolder, "bison", "data", "skeletons", "glr.cc"), ) as f:
             content_lines = f.readlines()
         license_content = []
         for i in range(2, 16):
             license_content.append(content_lines[i][2:-1])
-        tools.save("%s/%s/LICENSE" % (self.source_folder, self._source_subfolder), "\n".join(license_content))
+        tools.save(os.path.join(self.source_folder, self._source_subfolder, "COPYING"), "\n".join(license_content))
 
     def build(self):
         cmake = CMake(self)
@@ -44,11 +66,13 @@ class WinflexbisonConan(ConanFile):
         cmake.build()
 
     def package(self):
-        self.copy(pattern="LICENSE", dst="licenses", src=self._source_subfolder)
+        self.copy(pattern="COPYING", dst="licenses", src=self._source_subfolder)
         self.copy(pattern="data/*", dst="bin", src="{}/bison".format(self._source_subfolder), keep_path=True)
         actual_build_path = "{}/bin/{}".format(self._source_subfolder, self.settings.build_type)
         self.copy(pattern="*.exe", dst="bin", src=actual_build_path, keep_path=False)
         self.copy(pattern="*.h", dst="include", src=actual_build_path, keep_path=False)
 
     def package_info(self):
-        self.env_info.PATH.append(os.path.join(self.package_folder, "bin"))
+        bindir = os.path.join(self.package_folder, "bin")
+        self.output.info("Appending PATH environment variable: {}".format(bindir))
+        self.env_info.PATH.append(bindir)
