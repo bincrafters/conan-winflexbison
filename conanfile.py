@@ -28,6 +28,7 @@ class WinflexbisonConan(ConanFile):
             raise ConanInvalidConfiguration("winflexbison is only supported for Visual Studio.")
 
     def package_id(self):
+        self.info.include_build_settings()
         del self.info.settings.arch
         del self.info.settings.compiler
         del self.info.settings.build_type
