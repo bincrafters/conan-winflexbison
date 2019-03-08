@@ -8,7 +8,7 @@ import tempfile
 
 
 class WinflexbisonConan(ConanFile):
-    name = "winflexbison_installer"
+    name = "winflexbison"
     version = "2.5.17"
     description = "Flex and Bison for Windows"
     url = "https://github.com/bincrafters/conan-winflexbison"
@@ -20,7 +20,7 @@ class WinflexbisonConan(ConanFile):
     generators = "cmake"
     settings = "arch", "os_build", "arch_build", "compiler", "build_type"
 
-    _source_subfolder = "sources"
+    _source_subfolder = "source_subfolder"
 
     def configure(self):
         self.settings.arch = str(self.settings.arch_build)
@@ -34,21 +34,8 @@ class WinflexbisonConan(ConanFile):
         del self.info.settings.build_type
 
     def source(self):
-        name = "winflexbison"
-        url = "https://github.com/lexxmark/winflexbison/archive/v{}.tar.gz".format(self.version)
-        sha256 = "2ab4c895f9baf03dfdfbb2dc4abe60e87bf46efe12ed1218c38fd7761f0f58fc"
-        filename = "{}-{}.tar.gz".format(name, self.version)
-
-        dlfilepath = os.path.join(tempfile.gettempdir(), filename)
-        if os.path.exists(dlfilepath) and not tools.get_env("WINFLEXBISON_FORCE_DOWNLOAD", False):
-            self.output.info("Skipping download. Using cached {}".format(dlfilepath))
-        else:
-            self.output.info("Downloading {} from {}".format(name, url))
-            tools.download(url, dlfilepath)
-        tools.check_sha256(dlfilepath, sha256)
-        tools.untargz(dlfilepath)
-
-        extracted_dir = "{}-{}".format(name, self.version)
+        tools.get("{0}/archive/v{1}.tar.gz".format(self.homepage, self.version), sha256="2ab4c895f9baf03dfdfbb2dc4abe60e87bf46efe12ed1218c38fd7761f0f58fc")
+        extracted_dir = self.name + "-" + self.version
         os.rename(extracted_dir, self._source_subfolder)
 
         # Generate license from header of a source file
@@ -78,6 +65,7 @@ class WinflexbisonConan(ConanFile):
                 pass
             cmake.install(args=["--config", str(self.settings.build_type)])
 
+        self.copy("LICENSE.md", dst="licenses")
         self.copy(pattern="COPYING", dst="licenses", src=self._source_subfolder)
 
         self.copy(pattern="*.exe", src=self._fake_package, dst="bin",keep_path=False)
