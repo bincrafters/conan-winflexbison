@@ -4,7 +4,6 @@ import os
 from conans import ConanFile, CMake, tools
 from conans.errors import ConanInvalidConfiguration
 import shutil
-import tempfile
 
 
 class WinflexbisonConan(ConanFile):
@@ -24,8 +23,9 @@ class WinflexbisonConan(ConanFile):
 
     def configure(self):
         self.settings.arch = str(self.settings.arch_build)
-        if self.settings.compiler != "Visual Studio":
-            raise ConanInvalidConfiguration("winflexbison is only supported for Visual Studio.")
+        if not self.in_local_cache:
+            if self.settings.compiler != "Visual Studio":
+                raise ConanInvalidConfiguration("Building winflexbison is only supported for Visual Studio.")
 
     def package_id(self):
         self.info.include_build_settings()
