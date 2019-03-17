@@ -36,7 +36,7 @@ class WinflexbisonConan(ConanFile):
         license_content = []
         for i in range(2, 16):
             license_content.append(content_lines[i][2:-1])
-        tools.save("%s/%s/LICENSE" % (self.source_folder, self._source_subfolder), "\n".join(license_content))
+        tools.save(os.path.join(self.source_folder, self._source_subfolder, "COPYING"), "\n".join(license_content))
 
     def build(self):
         cmake = CMake(self)
@@ -44,7 +44,8 @@ class WinflexbisonConan(ConanFile):
         cmake.build()
 
     def package(self):
-        self.copy(pattern="LICENSE", dst="licenses", src=self._source_subfolder)
+        self.copy(pattern="LICENSE*", dst="licenses", src=self.build_folder)
+        self.copy(pattern="COPYING", dst="licenses", src=self._source_subfolder)
         self.copy(pattern="data/*", dst="bin", src="{}/bison".format(self._source_subfolder), keep_path=True)
         actual_build_path = "{}/bin/{}".format(self._source_subfolder, self.settings.build_type)
         self.copy(pattern="*.exe", dst="bin", src=actual_build_path, keep_path=False)
