@@ -31,7 +31,7 @@ class WinflexbisonConan(ConanFile):
         extracted_dir = self.name + "-" + self.version
         os.rename(extracted_dir, self._source_subfolder)
         # Generate license from header of a source file
-        with open("%s/%s/bison/data/glr.cc" % (self.source_folder, self._source_subfolder)) as f:
+        with open(os.path.join(self.source_folder, self._source_subfolder, "bison", "data", "skeletons", "glr.cc")) as f:
             content_lines = f.readlines()
         license_content = []
         for i in range(2, 16):
