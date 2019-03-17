@@ -16,8 +16,6 @@ class TestPackageConan(ConanFile):
     def test(self):
         self.run("win_flex --version", run_environment=True)
         self.run("win_bison --version", run_environment=True)
-        self.run("flex --version", run_environment=True)
-        self.run("bison --version", run_environment=True)
 
         if not tools.cross_building(self.settings):
             with tools.environment_append(RunEnvironment(self).vars):
