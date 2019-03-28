@@ -59,6 +59,7 @@ class WinflexbisonConan(ConanFile):
         self.copy(pattern="*.h", dst="include", src=actual_build_path, keep_path=False)
 
     def package_id(self):
+        self.info.include_build_settings()
         del self.info.settings.arch
         del self.info.settings.compiler
         del self.info.settings.build_type
