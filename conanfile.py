@@ -10,6 +10,7 @@ class WinflexbisonConan(ConanFile):
     name = "winflexbison"
     version = "2.5.17"
     description = "Flex and Bison for Windows"
+    topics = ("conan", "winflexbison", "flex", "bison")
     url = "https://github.com/bincrafters/conan-winflexbison"
     homepage = "https://github.com/lexxmark/winflexbison"
     author = "Bincrafters <bincrafters@gmail.com>"
@@ -17,13 +18,15 @@ class WinflexbisonConan(ConanFile):
     exports = ["LICENSE.md"]
     exports_sources = ["CMakeLists.txt"]
     generators = "cmake"
-    settings = "os", "arch", "compiler", "build_type"
+
+    settings = "os_build", "arch_build", "build_type", "arch", "compiler"
     options = {"shared": [True, False]}
     default_options = {"shared": False}
+
     _source_subfolder = "source_subfolder"
 
     def config_options(self):
-        if self.settings.os != "Windows":
+        if self.settings.os_build != "Windows":
             raise ConanInvalidConfiguration("winflexbison is only supported on Windows.")
 
     def source(self):
@@ -38,9 +41,13 @@ class WinflexbisonConan(ConanFile):
             license_content.append(content_lines[i][2:-1])
         tools.save(os.path.join(self.source_folder, self._source_subfolder, "COPYING"), "\n".join(license_content))
 
-    def build(self):
+    def _configure_cmake(self):
         cmake = CMake(self)
         cmake.configure()
+        return cmake
+
+    def build(self):
+        cmake = self._configure_cmake()
         cmake.build()
 
     def package(self):
@@ -51,5 +58,12 @@ class WinflexbisonConan(ConanFile):
         self.copy(pattern="*.exe", dst="bin", src=actual_build_path, keep_path=False)
         self.copy(pattern="*.h", dst="include", src=actual_build_path, keep_path=False)
 
+    def package_id(self):
+        del self.info.settings.arch
+        del self.info.settings.compiler
+        del self.info.settings.build_type
+
     def package_info(self):
-        self.env_info.PATH.append(os.path.join(self.package_folder, "bin"))
+        bindir = os.path.join(self.package_folder, "bin")
+        self.output.info("Appending PATH environment variable: {}".format(bindir))
+        self.env_info.PATH.append(bindir)
