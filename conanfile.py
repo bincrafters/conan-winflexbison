@@ -8,7 +8,7 @@ from conans.errors import ConanInvalidConfiguration
 
 class WinflexbisonConan(ConanFile):
     name = "winflexbison"
-    version = "2.5.17"
+    version = "2.5.18"
     description = "Flex and Bison for Windows"
     topics = ("conan", "winflexbison", "flex", "bison")
     url = "https://github.com/bincrafters/conan-winflexbison"
@@ -30,7 +30,7 @@ class WinflexbisonConan(ConanFile):
             raise ConanInvalidConfiguration("winflexbison is only supported on Windows.")
 
     def source(self):
-        tools.get("{0}/archive/v{1}.tar.gz".format(self.homepage, self.version), sha256="2ab4c895f9baf03dfdfbb2dc4abe60e87bf46efe12ed1218c38fd7761f0f58fc")
+        tools.get("{0}/archive/v{1}.tar.gz".format(self.homepage, self.version), sha256="1db991bebaded832427539b6b28a8f36948e5ce3db5701b5104f85b66b8484de")
         extracted_dir = self.name + "-" + self.version
         os.rename(extracted_dir, self._source_subfolder)
         # Generate license from header of a source file
