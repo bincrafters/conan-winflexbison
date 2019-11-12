@@ -10,7 +10,6 @@ class WinflexbisonConan(ConanFile):
     topics = ("conan", "winflexbison", "flex", "bison")
     url = "https://github.com/bincrafters/conan-winflexbison"
     homepage = "https://github.com/lexxmark/winflexbison"
-    author = "Bincrafters <bincrafters@gmail.com>"
     license = "GPLv3"
     exports = ["LICENSE.md"]
     exports_sources = ["CMakeLists.txt"]
