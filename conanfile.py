@@ -11,13 +11,10 @@ class WinflexbisonConan(ConanFile):
     url = "https://github.com/bincrafters/conan-winflexbison"
     homepage = "https://github.com/lexxmark/winflexbison"
     license = "GPLv3"
-    exports = ["LICENSE.md"]
     exports_sources = ["CMakeLists.txt"]
     generators = "cmake"
 
     settings = "os_build", "arch_build", "build_type", "arch", "compiler"
-    options = {"shared": [True, False]}
-    default_options = {"shared": False}
 
     _source_subfolder = "source_subfolder"
 
